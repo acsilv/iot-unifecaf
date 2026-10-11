@@ -1,0 +1,33 @@
+{
+  "rows": 97605,
+  "input_rows": 97606,
+  "duplicates": 1,
+  "rejected": 0,
+  "start": "2018-07-28 07:06:00",
+  "end": "2018-12-08 09:30:00",
+  "mean": 35.0538599456995,
+  "min": 21.0,
+  "max": 51.0,
+  "days": 86,
+  "postgres_version": "17.11 (Debian 17.11-1.pgdg13+2)",
+  "groups": [
+    {
+      "device_id": "Room Admin",
+      "location": "In",
+      "leituras": 20345,
+      "avg_temp": 30.4539198820349,
+      "temp_min": 21.0,
+      "temp_max": 41.0
+    },
+    {
+      "device_id": "Room Admin",
+      "location": "Out",
+      "leituras": 77260,
+      "avg_temp": 36.26516955733886,
+      "temp_min": 24.0,
+      "temp_max": 51.0
+    }
+  ],
+  "hour_peak": 14,
+  "sql_csv_reconciliation": "APROVADA: contagens, medias, minimas e maximas das tres views conferidas com pandas"
+}

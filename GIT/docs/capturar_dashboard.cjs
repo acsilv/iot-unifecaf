@@ -1,0 +1,37 @@
+// Captura e verifica a aplicacao real em http://127.0.0.1:8501.
+const { chromium } = require(process.env.PLAYWRIGHT_MODULE || 'playwright');
+const fs = require('fs');
+const path = require('path');
+(async () => {
+  const browser = await chromium.launch({channel:'msedge', headless:true});
+  const page = await browser.newPage({viewport:{width:1600,height:1580}, deviceScaleFactor:1});
+  const errors=[];
+  page.on('pageerror', e => errors.push(e.message));
+  await page.goto('http://127.0.0.1:8501', {waitUntil:'domcontentloaded'});
+  await page.getByText('97.605',{exact:true}).waitFor({timeout:60000});
+  const charts = page.locator('[data-testid="stPlotlyChart"]');
+  await charts.nth(2).waitFor();
+  await page.waitForFunction(() => document.querySelectorAll('.js-plotly-plot').length === 3);
+  const out=path.resolve(__dirname,'imagens'); fs.mkdirSync(out,{recursive:true});
+  await page.screenshot({path:path.join(out,'dashboard-visao-geral.png')});
+  for(let i=0;i<3;i++) await charts.nth(i).screenshot({path:path.join(out,`grafico-${i+1}.png`)});
+  await page.getByTestId('stRadioGroup').getByText('Interno',{exact:true}).click();
+  await page.getByText('20.345',{exact:true}).waitFor();
+  await page.getByText('30.5 °C',{exact:true}).waitFor();
+  await page.screenshot({path:path.join(out,'dashboard-interno.png')});
+  await page.getByTestId('stRadioGroup').getByText('Externo',{exact:true}).click();
+  await page.getByText('77.260',{exact:true}).waitFor();
+  await page.getByText('36.3 °C',{exact:true}).waitFor();
+  await page.getByTestId('stRadioGroup').getByText('Todos',{exact:true}).click();
+  await page.getByText('97.605',{exact:true}).waitFor();
+  await page.getByText('Consultar tabela e exportar os dados agregados').click();
+  const downloadPromise=page.waitForEvent('download');
+  await page.getByRole('button',{name:'Baixar resumo diário (CSV)'}).click();
+  const download=await downloadPromise;
+  await download.saveAs(path.resolve(__dirname,'resultados/exportacao_dashboard.csv'));
+  if(errors.length) throw new Error(errors.join('\n'));
+  const result={dashboard:'APROVADO',graficos:await charts.count(),filtro_interno:20345,filtro_externo:77260,exportacao_csv:'APROVADA',browser_errors:errors};
+  fs.writeFileSync(path.resolve(__dirname,'resultados/verificacao_dashboard.json'),JSON.stringify(result,null,2));
+  console.log(JSON.stringify(result));
+  await browser.close();
+})().catch(e => {console.error(e);process.exit(1);});

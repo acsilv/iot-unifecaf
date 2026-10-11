@@ -1,0 +1,8 @@
+{
+  "data": "2026-10-10",
+  "comando": "RUN_POSTGRES_TESTS=1 python -m pytest -q",
+  "aprovados": 11,
+  "falhas": 0,
+  "integracao": "PostgreSQL real, com schema temporario isolado",
+  "escopo": ["validacao", "datas", "valores nao finitos", "duplicacao", "conflitos", "idempotencia", "views SQL", "rollback"]
+}

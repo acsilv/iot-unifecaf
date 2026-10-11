@@ -1,0 +1,10 @@
+{
+  "source_name": "IOT-temp.csv",
+  "source_sha256": "2bf965701db96cd5788403d395a25d2dd7282bea24e317b7f7b157b7a02063d4",
+  "input_rows": 97606,
+  "rejected_rows": 0,
+  "duplicate_ids": 1,
+  "inserted_rows": 0,
+  "existing_rows": 97605,
+  "database_rows": 97605
+}
